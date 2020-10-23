@@ -1,0 +1,22 @@
+<launch>
+<node
+pkg="turtlesim"
+type="turtlesim_node"
+name="turtlesim"
+required="true"
+/>
+<node
+pkg="turtlesim"
+type="turtle_teleop_key"
+name="teleop_key"
+required="true"
+launch-prefix="xterm -e"
+/>
+<node
+pkg="my_turtle_control"
+type="rond.py"
+name="Et_on_fait_tourner_la_tortue"
+output="screen"
+required="true"
+/>
+</launch>

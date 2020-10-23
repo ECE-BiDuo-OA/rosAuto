@@ -1,0 +1,8 @@
+<launch>
+	<node pkg="turtlesim" name="sim" type="turtlesim_node" >
+	</node>
+
+	<node pkg="tp_solutions" name="talker" type="talker.py" >
+		<param name="~vel" value="2.0"/>
+	</node>
+</launch>
