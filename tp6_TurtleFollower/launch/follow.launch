@@ -10,8 +10,16 @@ required="true"
 <node pkg="tp6_TurtleFollower"
 type="follow.py"
 name="follow_node"
+required="true"
+output="screen"
+/>
+
+<node pkg="tp6_TurtleFollower"
+type="commander.py"
+name="commander"
 respawn="true"
 output="screen"
+launch-prefix="xterm -e"
 />
 
 </launch>

@@ -12,8 +12,15 @@ Kp=1
 Uv=0
 Uw=0
 
-def callback(data):
+def callback_newRef(data):
+    global xRef, yRef
+    xRef = data.x
+    yRef = data.y
+
+def callback_command(data):
     global xRef, yRef, Uv, Uw
+    print("\nxRef: {}\tyRef: {}".format(xRef,yRef))
+    
     x = data.x
     y = data.y
     theta = data.theta
@@ -27,7 +34,7 @@ def callback(data):
     print("diff: {}".format(diff))
     
     Uw=-Kp * diff
-    if diff <= 0.01: Uw = 0.0
+    if abs(diff) <= 0.01: Uw = 0.0
     
     dist = np.sqrt((yRef-y)**2+(xRef-x)**2)
     Uv=min(dist,1)
@@ -42,19 +49,10 @@ def talker():
     global Uv, Uw
     rospy.init_node('talker', anonymous=True)
     pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
-    rospy.Subscriber('/turtle1/pose', Pose, callback)
+    rospy.Subscriber('/turtle1/pose', Pose, callback_command)
+    rospy.Subscriber('/turtle1/destination', Point, callback_newRef)
     
     rate = rospy.Rate(10) # 1hz
-    
-    try:
-        minSpeed = rospy.get_param(rospy.search_param("minSpeed"))
-        maxSpeed = rospy.get_param(rospy.search_param("maxSpeed"))
-        assert minSpeed + maxSpeed +1
-    except:
-        minSpeed = -2
-        maxSpeed = 2
-        print("No param, min will be set to {} and max to {}".format(minSpeed,maxSpeed))
-        
 
     while not rospy.is_shutdown():
         speed = Twist()
