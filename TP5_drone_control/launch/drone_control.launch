@@ -39,7 +39,7 @@
       <remap from="odometry" to="odometry_sensor1/odometry"/>
     </node>
 
-    <node name="drone_control" pkg="drone_control" type="drone_control.py" output="screen" respawn="true" launch-prefix="xterm -e"/>
+    <node name="drone_control" pkg="tp5_drone_control" type="drone_control.py" output="screen" respawn="true" launch-prefix="xterm -e"/>
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />

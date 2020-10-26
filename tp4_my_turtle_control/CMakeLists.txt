@@ -103,7 +103,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES my_turtle_control
+#  LIBRARIES tp4_my_turtle_control
 #  CATKIN_DEPENDS geometry_msgs rospy
 #  DEPENDS system_lib
 )
