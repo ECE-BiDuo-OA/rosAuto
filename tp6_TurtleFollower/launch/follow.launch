@@ -7,7 +7,7 @@ name="turtlesim"
 required="true"
 />
 
-<node pkg="TP6_TurtleFollower"
+<node pkg="tp6_TurtleFollower"
 type="follow.py"
 name="follow_node"
 respawn="true"
