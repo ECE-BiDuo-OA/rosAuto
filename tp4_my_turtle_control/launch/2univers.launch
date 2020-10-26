@@ -1,8 +1,9 @@
 <launch>
 <node
+name="turtlesim_node"
 pkg="turtlesim"
 type="turtlesim_node"
-name="turtlesim"
+ns="sim1"
 required="true"
 />
 <node
@@ -11,12 +12,20 @@ type="turtle_teleop_key"
 name="teleop_key"
 required="true"
 launch-prefix="xterm -e"
+ns="sim1"
 />
 <node
-pkg="my_turtle_control"
-type="rond.py"
-name="Et_on_fait_tourner_la_tortue"
-output="screen"
+name="turtlesim_node_2"
+pkg="turtlesim"
+type="turtlesim_node"
+ns="sim2"
+required="true"
+/>
+<node
+pkg="tp4_my_turtle_control"
+type="rond_sim2.py"
+name="rond_node"
+ns="sim2"
 required="true"
 />
 </launch>

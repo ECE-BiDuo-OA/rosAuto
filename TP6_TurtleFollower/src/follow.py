@@ -6,7 +6,7 @@ from turtlesim.msg import Pose
 
 xRef=2
 yRef=2
-vRef=2
+vRef=0
 
 Kp=1
 Uv=0
