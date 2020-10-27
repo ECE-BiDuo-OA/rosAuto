@@ -3,7 +3,6 @@ import rospy, random
 import numpy as np
 from geometry_msgs.msg import Twist, Point
 from nav_msgs.msg import Odometry, Path
-from turtlesim.msg import Pose
 from geometry_msgs.msg import PoseStamped
 
 xRef=3
@@ -13,12 +12,21 @@ vRef=0
 Kp=1
 Uv=0
 Uw=0
+
 pth=Path()
 
-def callback_newRef(data):
+def callback_newPath(data):
+    print("Kishor King")
+    for pose in data.poses:
+        faut recuperer les positions pour chaque point, et les mettre dans une liste
+        
+        
+    print(len(poses))
+    #print(data.pose.pose.position.x)
+
     global xRef, yRef
-    xRef = data.x
-    yRef = data.y
+    #xRef = data.x
+    #yRef = data.y
 
 def callback_command(data):
     global xRef, yRef, Uv, Uw
@@ -54,19 +62,7 @@ def callback_command(data):
     print("Distance to target: {}".format(dist))
 
 def createPath():
-    global pth
-    pth = Path()
-    pth.header.frame_id = "/map"
-    pth.header.stamp = rospy.Time.now()
     
-    pose = PoseStamped()
-    pose.pose.position.x = 5
-    pose.pose.position.y = 5
-    msg.poses.append(pose)
-    
-    pose.pose.position.x = 2
-    pose.pose.position.y = 2
-    pth.poses.append(pose)
 
     
 
@@ -75,7 +71,7 @@ def talker():
     rospy.init_node('talker', anonymous=True)
     pub = rospy.Publisher('/husky_velocity_controller/cmd_vel', Twist, queue_size=10)
     rospy.Subscriber('/odometry/filtered', Odometry, callback_command)
-    rospy.Subscriber('/destination', Point, callback_newRef)
+    rospy.Subscriber('/destination', Path, callback_newPath)
     
     rate = rospy.Rate(10) # 1hz
     
