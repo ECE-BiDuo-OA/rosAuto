@@ -4,6 +4,7 @@ import numpy as np
 from geometry_msgs.msg import Twist, Point
 from nav_msgs.msg import Odometry, Path
 from turtlesim.msg import Pose
+from geometry_msgs.msg import PoseStamped
 
 xRef=3
 yRef=2
@@ -12,6 +13,7 @@ vRef=0
 Kp=1
 Uv=0
 Uw=0
+pth=Path()
 
 def callback_newRef(data):
     global xRef, yRef
@@ -50,6 +52,22 @@ def callback_command(data):
     print("Uw: {}\tUv: {}".format(Uw,Uv))
     
     print("Distance to target: {}".format(dist))
+
+def createPath():
+    global pth
+    pth = Path()
+    pth.header.frame_id = "/map"
+    pth.header.stamp = rospy.Time.now()
+    
+    pose = PoseStamped()
+    pose.pose.position.x = 5
+    pose.pose.position.y = 5
+    msg.poses.append(pose)
+    
+    pose.pose.position.x = 2
+    pose.pose.position.y = 2
+    pth.poses.append(pose)
+
     
 
 def talker():
@@ -60,7 +78,9 @@ def talker():
     rospy.Subscriber('/destination', Point, callback_newRef)
     
     rate = rospy.Rate(10) # 1hz
-
+    
+    
+    
     while not rospy.is_shutdown():
         speed = Twist()
         speed.linear.x = Uv
@@ -71,6 +91,7 @@ def talker():
 
 if __name__ == '__main__':
     try:
+        createPath()
         talker()
     except rospy.ROSInterruptException:
         pass

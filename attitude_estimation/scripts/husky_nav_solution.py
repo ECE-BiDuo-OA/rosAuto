@@ -32,7 +32,7 @@ def callback_pose(data):
     if delta < -math.pi:	delta = delta + 2*math.pi
     dist = math.sqrt((yp-y)*(yp-y)+(xp-x)*(xp-x))
     if dist <= 0.2: 
-	vel = 0.0
+	    vel = 0.0
 	omega = 0.0    
     else: 
 	vel = velref
