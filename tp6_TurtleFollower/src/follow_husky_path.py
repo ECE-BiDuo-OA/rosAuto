@@ -5,15 +5,14 @@ from geometry_msgs.msg import Twist, Point
 from nav_msgs.msg import Odometry, Path
 from geometry_msgs.msg import PoseStamped
 
-xRef=3
-yRef=2
+
 vRef=0
 
 Kp=1
 Uv=0
 Uw=0
 
-pointsList=[]
+pointsList=[[0,0]]
 index=0
 
 
@@ -32,8 +31,14 @@ def callback_newPath(data):
     print(pointsList)
 
 def callback_command(data):
-    global xRef, yRef, Uv, Uw
-    #print("\nxRef: {}\tyRef: {}".format(xRef,yRef))
+    global Uv, Uw, pointsList, index
+    
+    #print("\nindex: {}\tPath: {}".format(index,pointsList))
+    
+    xRef=pointsList[index][0]
+    yRef=pointsList[index][1]
+    
+    #print("xRef: {}\tyRef: {}".format(xRef,yRef))
     
     qz=data.pose.pose.orientation.z
     qw=data.pose.pose.orientation.w
@@ -59,6 +64,10 @@ def callback_command(data):
     dist = np.sqrt((yRef-y)**2+(xRef-x)**2)
     if dist > 2: Uv = 1
     if dist <= 2: Uv = dist/2
+    
+    if dist <= 0.1:
+        if index < len(pointsList)-1:
+            index += 1
             
     #print("Uw: {}\tUv: {}".format(Uw,Uv))
     

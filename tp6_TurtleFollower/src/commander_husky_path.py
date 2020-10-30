@@ -9,7 +9,8 @@ def commander():
     rospy.init_node('commander', anonymous=True)
     pub = rospy.Publisher('/destination', Path, queue_size=10)
     
-    while 1:        
+    while 1:      
+        print("Creating path")  
         pth = Path()
         pth.header.frame_id = "/map"
         pth.header.stamp = rospy.Time.now()
@@ -41,7 +42,7 @@ def commander():
         
         pub.publish(pth)
         print("Path sent")
-        time.sleep(5)
+        time.sleep(60)
         
 
 if __name__ == '__main__':
