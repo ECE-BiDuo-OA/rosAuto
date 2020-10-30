@@ -3,7 +3,7 @@
   <node pkg="tp6_TurtleFollower"
     type="follow_husky_path.py"
     name="follow_node"
-    required="true"
+    respawn="true"
     output="screen"
     launch-prefix="xterm -e"
   />

@@ -13,24 +13,27 @@ Kp=1
 Uv=0
 Uw=0
 
-pth=Path()
+pointsList=[]
+index=0
 
-def callback_newPath(data):
+
+def callback_newPath(data): 
     print("Kishor King")
-    for pose in data.poses:
-        faut recuperer les positions pour chaque point, et les mettre dans une liste
-        
-        
-    print(len(poses))
-    #print(data.pose.pose.position.x)
-
-    global xRef, yRef
-    #xRef = data.x
-    #yRef = data.y
+    
+    global pointsList,index
+    pointsList=[]
+    index=0
+    
+    for poseStamped in data.poses:
+        x = poseStamped.pose.position.x
+        y = poseStamped.pose.position.y
+        pointsList.append([x, y])
+    
+    print(pointsList)
 
 def callback_command(data):
     global xRef, yRef, Uv, Uw
-    print("\nxRef: {}\tyRef: {}".format(xRef,yRef))
+    #print("\nxRef: {}\tyRef: {}".format(xRef,yRef))
     
     qz=data.pose.pose.orientation.z
     qw=data.pose.pose.orientation.w
@@ -38,16 +41,16 @@ def callback_command(data):
     
     x = data.pose.pose.position.x
     y = data.pose.pose.position.y
-    print("x: {}\ty: {}\ttheta: {}".format(x,y,theta))
+    #print("x: {}\ty: {}\ttheta: {}".format(x,y,theta))
     
     phi=np.arctan2((yRef - y),(xRef-x))
-    print("phi: {}".format(phi))
+    #print("phi: {}".format(phi))
     
     diff = theta - phi
     
     if diff >= np.pi:	diff -= 2*np.pi
     if diff < -np.pi:	diff += 2*np.pi
-    print("diff: {}".format(diff))
+    #print("diff: {}".format(diff))
     
     Uw=-Kp * diff
     if abs(diff) <= 0.01: Uw = 0.0
@@ -57,12 +60,9 @@ def callback_command(data):
     if dist > 2: Uv = 1
     if dist <= 2: Uv = dist/2
             
-    print("Uw: {}\tUv: {}".format(Uw,Uv))
+    #print("Uw: {}\tUv: {}".format(Uw,Uv))
     
-    print("Distance to target: {}".format(dist))
-
-def createPath():
-    
+    #print("Distance to target: {}".format(dist))
 
     
 
@@ -75,8 +75,6 @@ def talker():
     
     rate = rospy.Rate(10) # 1hz
     
-    
-    
     while not rospy.is_shutdown():
         speed = Twist()
         speed.linear.x = Uv
@@ -87,7 +85,6 @@ def talker():
 
 if __name__ == '__main__':
     try:
-        createPath()
         talker()
     except rospy.ROSInterruptException:
         pass
