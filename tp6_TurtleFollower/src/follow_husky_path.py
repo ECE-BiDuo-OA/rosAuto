@@ -33,12 +33,12 @@ def callback_newPath(data):
 def callback_command(data):
     global Uv, Uw, pointsList, index
     
-    #print("\nindex: {}\tPath: {}".format(index,pointsList))
+    print("\nindex: {}\tPath: {}".format(index,pointsList))
     
     xRef=pointsList[index][0]
     yRef=pointsList[index][1]
     
-    #print("xRef: {}\tyRef: {}".format(xRef,yRef))
+    print("xRef: {}\tyRef: {}".format(xRef,yRef))
     
     qz=data.pose.pose.orientation.z
     qw=data.pose.pose.orientation.w
@@ -46,16 +46,16 @@ def callback_command(data):
     
     x = data.pose.pose.position.x
     y = data.pose.pose.position.y
-    #print("x: {}\ty: {}\ttheta: {}".format(x,y,theta))
+    print("x: {}\ty: {}\ttheta: {}".format(x,y,theta))
     
     phi=np.arctan2((yRef - y),(xRef-x))
-    #print("phi: {}".format(phi))
+    print("phi: {}".format(phi))
     
     diff = theta - phi
     
     if diff >= np.pi:	diff -= 2*np.pi
     if diff < -np.pi:	diff += 2*np.pi
-    #print("diff: {}".format(diff))
+    print("diff: {}".format(diff))
     
     Uw=-Kp * diff
     if abs(diff) <= 0.01: Uw = 0.0
@@ -65,13 +65,15 @@ def callback_command(data):
     if dist > 2: Uv = 1
     if dist <= 2: Uv = dist/2
     
-    if dist <= 0.1:
+    if dist <= 1:
         if index < len(pointsList)-1:
             index += 1
+        else:
+            Uv = 0
             
-    #print("Uw: {}\tUv: {}".format(Uw,Uv))
+    print("Uw: {}\tUv: {}".format(Uw,Uv))
     
-    #print("Distance to target: {}".format(dist))
+    print("Distance to target: {}".format(dist))
 
     
 
