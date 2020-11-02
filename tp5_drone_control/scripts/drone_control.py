@@ -13,16 +13,16 @@ Upsi=0
 mass = 1.544
 
 #simu params
-xRef = 2
-yRef = 2
-zRef = 2
+xRef = -2
+yRef = 5
+zRef = 4
 VxRef = 0
 VyRef = 0
 VzRef = 0
 psiRef = 0
 
-Kp = 0.1
-Kd = 0.1
+Kp = 1
+Kd = 1
 
 def callback_odom(data): 
     global mass, T, theta, phi, xRef, yRef, zRef, VxRef, VyRef, VzRef, psiRef, Kp, Kd, Upsi
@@ -63,7 +63,7 @@ def callback_odom(data):
     Upsi = -Kp * (psi-psiRef)
     T=mass*(Uz+9.81)
     theta = mass/T*(c*Ux+s*Uy)
-    phi=-mass/T*(s*Ux-c*Uy)
+    phi = mass/T*(s*Ux-c*Uy)
     print("Upsi: {}\tT: {}\tTheta: {}\tPhi: {}".format(Upsi, T, theta, phi))    
     print("")
 
