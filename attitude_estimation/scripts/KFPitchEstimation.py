@@ -40,9 +40,9 @@ IMURate = rospy.Rate(1./Te)
 # state : pitch angle (rad), gyro's bias (rad/s)
 # input: pitch rate (rad/s) from gyro measurement
 # measurement : pitch angle (rad) computed from accelero measurements
-nx = 2
-nu = 1
-ny = 1    
+nx = 2 #dimState
+nu = 1 #dimInput
+ny = 1 #dimOutput
 Ak = np.array( [[1.0, -Te],[0.0,1.0]] )
 Bk = np.array( [ [Te],[0.0] ] )
 Ck = np.array( [[1.0, 0.0]] )
@@ -52,6 +52,9 @@ Ck = np.array( [[1.0, 0.0]] )
 pitchKF = kf.KalmanFilter(nx, nu, ny)
 pitchKF.setStateEquation(Ak, Bk)
 pitchKF.setCk(Ck)
+rollKF = kf.KalmanFilter(nx, nu, ny)
+rollKF.setStateEquation(Ak, Bk)
+rollKF.setCk(Ck)
 
 
 
@@ -62,7 +65,7 @@ def callbackDynParam(config, level):
 # -----------------------------------------------------------------------------
 
     global gyroPitchRateStdDev, gyroPitchRateBiasStdDev, acceleroPitchStdDev
-    global Qk, Rk, pitchKF
+    global Qk, Rk, pitchKF, rollKF
 
     # standard deviations of noises
     gyroPitchRateStdDev = float("""{GyroPitchRateStdDev}""".format(**config))
@@ -76,6 +79,8 @@ def callbackDynParam(config, level):
     
     pitchKF.setQk(Qk)
     pitchKF.setRk(Rk)
+    rollKF.setQk(Qk)
+    rollKF.setRk(Rk)
     
    
     return config
@@ -95,6 +100,8 @@ Rk = np.array([math.pow(acceleroPitchStdDev,2)])
     
 pitchKF.setQk(Qk)
 pitchKF.setRk(Rk)
+rollKF.setQk(Qk)
+rollKF.setRk(Rk)
 
 
 
@@ -103,6 +110,7 @@ x0 = np.array([ [0.0],[-0.006] ])
 P0 = np.array( [ [0.5,0.0],[0.0,0.1] ] )  
 
 pitchKF.initFilter( x0 , P0 )
+rollKF.initFilter( x0 , P0 )
 
  
 # data structures for measurements from IMU
@@ -134,7 +142,7 @@ def callBackImuAcceleroGyro(data):
 # -----------------------------------------------------------------------------
     global accMeas, gyroMeas
     global quaternionGroundTruth, pitchGroundTruth, rollGroundTruth, yawGroundTruth
-    global pitchEstim, pitchKF
+    global pitchEstim, rollEstim, pitchKF, rollKF
     
     #read acceleration measurements
     accMeas[0] = data.linear_acceleration.x
@@ -164,14 +172,17 @@ def callBackImuAcceleroGyro(data):
     uk = gyroMeas[1,0]
     # KF prediction step
     pitchKF.predict(uk)
+    rollKF.predict(uk) #A CHANGER
     
     # compute pitch measurement from accelero    
     yk = math.atan2(-accMeas[0,0] , math.sqrt( math.pow(accMeas[1,0],2) + math.pow(accMeas[2,0],2) ) )
     # KF update step
     pitchKF.update(yk)
+    rollKF.update() #A CHANGER
 
     # get pitch estimate
     pitchEstim = pitchKF.xk[0,0]
+    rollEstim = rollKF.xk[0,0] #A CHANGER
     
 # -----------------------------------------------------------------------------        
 
@@ -215,7 +226,7 @@ if __name__ == '__main__':
         # message to be published with estimates of roll, pitch and yaw 
         msgEstimatedRPY.header.seq = msgEstimatedRPY.header.seq + 1
         msgEstimatedRPY.header.stamp = timeNow
-        msgEstimatedRPY.roll = np.nan # not a number (not computed -> to be completed to extend the code)
+        msgEstimatedRPY.roll = rollEstim
         msgEstimatedRPY.pitch = pitchEstim
         msgEstimatedRPY.yaw =  np.nan # not a computed (not computed -> to be completed to extend the code)
         # publish message        
