@@ -52,6 +52,7 @@ Ck = np.array( [[1.0, 0.0]] )
 pitchKF = kf.KalmanFilter(nx, nu, ny)
 pitchKF.setStateEquation(Ak, Bk)
 pitchKF.setCk(Ck)
+
 rollKF = kf.KalmanFilter(nx, nu, ny)
 rollKF.setStateEquation(Ak, Bk)
 rollKF.setCk(Ck)
@@ -79,6 +80,7 @@ def callbackDynParam(config, level):
     
     pitchKF.setQk(Qk)
     pitchKF.setRk(Rk)
+    
     rollKF.setQk(Qk)
     rollKF.setRk(Rk)
     
@@ -100,6 +102,7 @@ Rk = np.array([math.pow(acceleroPitchStdDev,2)])
     
 pitchKF.setQk(Qk)
 pitchKF.setRk(Rk)
+
 rollKF.setQk(Qk)
 rollKF.setRk(Rk)
 
@@ -168,17 +171,26 @@ def callBackImuAcceleroGyro(data):
     
     #print((rollGroundTruth, pitchGroundTruth, yawGroundTruth))
     
-    # read angular velocity measurement for pitch from gyro         
-    uk = gyroMeas[1,0]
+    # read angular velocity measurement for pitch from gyro 
+    uk = gyroMeas[1,0]      
     # KF prediction step
-    pitchKF.predict(uk)
-    rollKF.predict(uk) #A CHANGER
+    pitchKF.predict(uk)  
+    
+    # read angular velocity measurement for roll from gyro 
+    ukroll = gyroMeas[0,0] 
+    # KF prediction step
+    rollKF.predict(ukroll)
     
     # compute pitch measurement from accelero    
     yk = math.atan2(-accMeas[0,0] , math.sqrt( math.pow(accMeas[1,0],2) + math.pow(accMeas[2,0],2) ) )
     # KF update step
     pitchKF.update(yk)
-    rollKF.update() #A CHANGER
+    
+    # compute pitch measurement from accelero    
+    ykroll = math.atan2(accMeas[1,0] , math.sqrt( math.pow(accMeas[0,0],2) + math.pow(accMeas[2,0],2) ) )
+    #ykroll = math.atan2(-accMeas[2,0] , math.sqrt( math.pow(accMeas[0,0],2) + math.pow(accMeas[1,0],2) ) )
+    # KF update step
+    rollKF.update(ykroll)
 
     # get pitch estimate
     pitchEstim = pitchKF.xk[0,0]
