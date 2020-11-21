@@ -23,5 +23,9 @@
 - `roslaunch aleat.launch` tortue vitesse et direction aleatoire
 - `roslaunch aleatParam.launch` tortue vitesse et direction aleatoire avec parametre passé dans le .launch
 - `roslaunch follow.launch` tortue va vers un point, actualisé périodiquement par un script (LEQUEL ?) (A CORRIGER : PREMIER ENVOI QUI NE MARCHE PAS)
-- `roslaunch follow_husky.launch` description
-- `roslaunch follow_husky_path.launch` description
+- `roslaunch follow_husky.launch` Husky va vers un point, actualisé périodiquement par un script (LEQUEL ?) (A CORRIGER ? : PREMIER ENVOI QUI NE MARCHE PAS)
+- `roslaunch follow_husky_path.launch` Husky suit un chemin de points, puis s'arrete, actualisé périodiquement par un script (LEQUEL ?) (A CORRIGER ? : PREMIER ENVOI QUI NE MARCHE PAS)
+
+### TP 7 : attitude_estimation
+- Aller dans le dossier launch de `attitude_estimation`
+- `roslaunch KF_roll_imu_data_roll_only.launch` calcul la version lissée du roll
