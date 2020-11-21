@@ -17,3 +17,11 @@
 - Aller dans le dossier launch de `tp5_drone_control`
 - `roslaunch drone_control.launch` va se stabiliser en x=-2 y=5 z=4
 - `roslaunch mav_rpyt.launch` marche po
+
+### TP 6 : Turtle_follower
+- Aller dans le dossier launch de `tp6_Turtle_follower`
+- `roslaunch aleat.launch` tortue vitesse et direction aleatoire
+- `roslaunch aleatParam.launch` tortue vitesse et direction aleatoire avec parametre passé dans le .launch
+- `roslaunch follow.launch` tortue va vers un point, actualisé périodiquement par un script (LEQUEL ?) (A CORRIGER : PREMIER ENVOI QUI NE MARCHE PAS)
+- `roslaunch follow_husky.launch` description
+- `roslaunch follow_husky_path.launch` description
