@@ -8,15 +8,16 @@ from sensor_msgs.msg import Imu
 
 global xGPS, yGPS, vxGPS, vyGPS, oldvxGPS, oldvyGPS
 global realx, realy
-xGPS = yGPS = vxGPS = vyGPS = realx = realy =0
+global theta, v
+xGPS = yGPS = vxGPS = vyGPS = realx = realy = theta = v = oldvxGPS = oldvyGPS= 0
 
 def callbackImu(data):
+    global theta
     theta=data.orientation.w
-    time=data.header.stamp
-    #print("theta={:.3f} time={}".format(theta,time))
+    #print("theta={:.3f}".format(theta))
 
 def callbackGPS(data):
-    global xGPS, yGPS, vxGPS, vyGPS, oldvxGPS, oldvyGPS
+    global xGPS, yGPS, oldvxGPS, oldvyGPS, vxGPS, vyGPS
     dt=0.020 #seconds
     
     oldvxGPS=vxGPS
@@ -27,17 +28,11 @@ def callbackGPS(data):
     
     xGPS += (oldvxGPS+vxGPS) * dt/2
     yGPS += (oldvyGPS+vyGPS) * dt/2
-    
-    
-    
 
 def callbackHuskyVel(data):
-    vx=data.twist.twist.linear.x
-    vy=data.twist.twist.linear.y
-    wx=data.twist.twist.angular.x
-    wy=data.twist.twist.angular.y
-    #print("vx={:.3f} vy={:.3f}".format(vx,vy))
-    #print("wx={:.3f} wy={:.3f}".format(wx,wy))
+    global v
+    v=data.twist.twist.linear.x
+    #print("v={:.3f}".format(v))
     
 def solution(data):
     global realx, realy
@@ -46,7 +41,7 @@ def solution(data):
     
 
 def localisateur():
-    global xGPS, yGPS, realx, realy
+    global xGPS, yGPS, realx, realy, theta, v
 
     rospy.init_node('localisateur', anonymous=True)
     #pub = rospy.Publisher('/destination', Point, queue_size=10)
@@ -57,10 +52,16 @@ def localisateur():
     
     #rate = rospy.Rate(10) # 1hz
     
+    xGPS = yGPS = xOdom = yOdom = 0
     while not rospy.is_shutdown():
-        print("")
-        print("xGPS={:.3f} yGPS={:.3f}".format(xGPS,yGPS))
-        print("realx={:.3f} realy={:.3f}".format(realx,realy))
+        xOdom += v*np.cos(theta)
+        yOdom += v*np.sin(theta)
+        
+        
+        print("      x      y")
+        print("real {:.3f} {:.3f}".format(realx,realy))
+        print("GPS  {:.3f} {:.3f}".format(xGPS,yGPS))
+        print("Odom {:.3f} {:.3f}".format(xOdom,yOdom))
         
         time.sleep(1)
         #rate.sleep()
