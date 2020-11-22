@@ -44,8 +44,8 @@ def callback_command(data):
     Uw = min(0.5, Uw)
     
     dist = np.sqrt((yRef-y)**2+(xRef-x)**2)
-    if dist > 2: Uv = 1
-    if dist <= 2: Uv = dist/2
+    if dist > 2: Uv = 0.5
+    if dist <= 2: Uv = dist/4
             
     print("Uw: {}\tUv: {}".format(Uw,Uv))
     
