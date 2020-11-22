@@ -106,7 +106,7 @@
 - Lancer le terminal et faire un `source devel/setup.bash`
 - Puis faire `roslaunch attitude_estimation KF_roll_imu_data_roll_only.launch` 
 
-2) Robot mobile husky GPS
+2) Robot mobile husky GPS + ODOM
 #### 1ere façon
 - Aller dans le dossier launch de `tp6_Turtle_follower` 
 - `roslaunch localisation_husky.launch` 
@@ -114,10 +114,3 @@
 - Aller dans le dossier launch de `catkin_ws`
 - Lancer le terminal et faire un `source devel/setup.bash`
 - Puis faire `roslaunch tp6_TurtleFollower localisation_husky.launch` 
-
-3) Robot mobile husky ODOM
-#### 1ere façon
-A REMPLIR
-#### 2eme façon
-TQT JE LE REMPLIRAI
-
