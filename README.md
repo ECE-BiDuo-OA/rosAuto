@@ -41,10 +41,6 @@
 - Lancer le terminal et faire un `source devel/setup.bash`
 - Puis faire `roslaunch tp5_drone_control drone_control.launch` 
 
-### 2) à VERIFIER SI ça SERT VRAIMENT à QQ CHOSE
-- `roslaunch mav_rpyt.launch` marche po
-
-
 
 
 # TP 6 : Turtle_follower
